@@ -44,41 +44,61 @@ improvement.</p>
 
 <h2 id="specification">Specification</h2>
 
-<p>The <dfn>immediate continuation</dfn> of an expression is that part
-of the expression's continuation that is delimited by
+<p>Each continuation eventually extends a <dfn>primordial
+continuation</dfn>.  Each primordial continuation has a <dfn>liquid
+environment</dfn>, a set of bindings from <dfn>liquid locations</dfn>
+to values.  The liquid environment of the primordial continuation of
+the current continuation is the <dfn>current liquid store</dfn>.</p>
 
-<p>Like a variable, a <dfn>liquid</dfn> is an identifier naming a location.  Whenever a continuation is </p>
+<p>An identifier cannot only name a type of syntax or a location, but
+also a liquid location.  An identifier that names a liquid is called
+a <dfn>liquid variable</dfn> or <dfn>liquid</dfn>, for short.
 
 <p><u>Syntax:</u> <b>&langle;liquid&rangle;</b></p>
 
-<p>An expression consisting of a liquid is a liquid reference.  The
-value of the liquid reference is the value stored in the location to
-which the liquid is bound.</p>
+<p>An expression consisting of a liquid is a <dfn>liquid
+reference</dfn>.  The value of the liquid reference is the value in
+the current liquid environment for the liquid location named
+by <var>liquid</var>.</p>
+
+<p>If the current liquid environment does not contain a binding for
+that liquid location, an exception with condition
+type <code>&assertion</code> is raised.</p>
 
 <p><u>Syntax:</u> <b>set!</b> <b>&langle;liquid&rangle;</b></p>
 
 <p>The <code>&langle;expression&rangle;</code> is evaluated, and the
-resulting value is stored in the location to
-which <code>&langle;liquid&rangle;</code> is bound.</p>
+current continuation replaced by an equivalent continuation except
+that the liquid environment of its primordial continuation is extended
+by binding the liquid location named by <var>liquid</var> to the value
+of <var>expression</var>. The result of the <code>set!</code>
+expression is unspecified.</p>
+
+<p>If the current liquid environment does not contain a binding for
+that liquid location, an exception with condition
+type <code>&assertion</code> is raised.</p>
 
 <p><u>Definition:</u> <b>define-liquid</b> <var>&langle;liquid&rangle;</var> [<var>expression</var>]</p>
 
-<p>This definition binds <var>&langle;liquid&rangle;</var> to a new location before assigning the value of <var>expression</var> to it.</p>
+<p>This definition binds <var>&langle;liquid&rangle;</var> to a fresh liquid location before the
+<var>expression</var> is evaluated, and the current continuation
+replaced by an equivalent continuation except that the liquid
+environment of its primordial continuation is extended by binding the
+fresh liquid location to the value of <var>expression</var>.
 
-<p>Outside the continuation of <var>expression</var>, <var>&langle;liquid;&rangle</var> must not
-be assigned or referred to.  If this restriction is violated, an
-exception with condition type <code>&assertion</code> is raised.
-Another restriction is that the continuation of
-&langle;expression&rangle; should not be invoked more than once.
-Implementations may or may not detect that the continuation
-of <var>expression</var> is invoked more than once.  However, if the
-implementation detects this, it must raise an exception with condition
-type <code>&assertion</code>.</p>
+<p>the continuation of &langle;expression&rangle; should not be
+invoked more than once.  Implementations may or may not detect that
+the continuation of <var>expression</var> is invoked more than once.
+However, if the implementation detects this, it must raise an
+exception with condition type <code>&assertion</code>.</p>
+
+<p>If the optional <var>expression</var> is not given, a
+side-effect-free expression returning an unspecified value is used
+instead.</p>
 
 <p><u>Syntax:</u> <b>let-liquid</b> ...</p>
 
 <p><u>Syntax:</u> <b>liquid-let</b> ...</p>
-
 
 <p>Please include examples.  They make it much easier for readers to
 understand your proposal.</p>
