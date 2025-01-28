@@ -30,8 +30,7 @@ need for, and design of, the proposal.</p>
 
 <h2 id="issues">Issues</h2>
 
-<p>??? Optional section that may point out things to be resolved.  This
-will not appear in the final SRFI.</p>
+<p>None at present.</p>
 
 <h2 id="rationale">Rationale</h2>
 
@@ -45,39 +44,44 @@ improvement.</p>
 
 <h2 id="specification">Specification</h2>
 
+<p>The <dfn>immediate continuation</dfn> of an expression is that part
+of the expression's continuation that is delimited by
 
+<p>Like a variable, a <dfn>liquid</dfn> is an identifier naming a location.  Whenever a continuation is </p>
 
-<p><u>Procedure:</u> <b>liquid-ref</b> <var>key</var> [<var>default</var>]</p>
+<p><u>Syntax:</u> <b>&langle;liquid&rangle;</b></p>
 
-<p><u>Procedure:</u> <b>liquid-set!</b> <var>key</var> <var>value</var></p>
+<p>An expression consisting of a liquid is a liquid reference.  The
+value of the liquid reference is the value stored in the location to
+which the liquid is bound.</p>
+
+<p><u>Syntax:</u> <b>set!</b> <b>&langle;liquid&rangle;</b></p>
+
+<p>The <code>&langle;expression&rangle;</code> is evaluated, and the
+resulting value is stored in the location to
+which <code>&langle;liquid&rangle;</code> is bound.</p>
+
+<p><u>Definition:</u> <b>define-liquid</b> <var>&langle;liquid&rangle;</var> [<var>expression</var>]</p>
+
+<p>This definition binds <var>&langle;liquid&rangle;</var> to a new location before assigning the value of <var>expression</var> to it.</p>
+
+<p>Outside the continuation of <var>expression</var>, <var>&langle;liquid;&rangle</var> must not
+be assigned or referred to.  If this restriction is violated, an
+exception with condition type <code>&assertion</code> is raised.
+Another restriction is that the continuation of
+&langle;expression&rangle; should not be invoked more than once.
+Implementations may or may not detect that the continuation
+of <var>expression</var> is invoked more than once.  However, if the
+implementation detects this, it must raise an exception with condition
+type <code>&assertion</code>.</p>
 
 <p><u>Syntax:</u> <b>let-liquid</b> ...</p>
 
 <p><u>Syntax:</u> <b>liquid-let</b> ...</p>
 
-<p><u>Syntax:</u> <b>define-syntax</b> <var>id</var> [<var>expression</var>]</p>
-
-<p>??? detailed specification.  This should be detailed enough that a
-conforming implementation could be completely created from this
-description.</p>
 
 <p>Please include examples.  They make it much easier for readers to
 understand your proposal.</p>
-
-<p>Please follow the linguistic conventions described in the <a
-href="/srfi-faq.html#conventions">FAQ</a>.  In particular, please
-follow the conventions about the use of the terms <dfn>must,</dfn> <dfn>must not,</dfn>
-<dfn>required,</dfn> <dfn>shall,</dfn> <dfn>shall not,</dfn> <dfn>should,</dfn> <dfn>should not,</dfn>
-<dfn>recommended,</dfn> <dfn>may,</dfn> and <dfn>optional</dfn> defined by <a
-href="https://www.ietf.org/rfc/rfc2119.html">RFC 2119</a>.  This
-convention has been adopted by R7RS Small, too, in section 1.3.2
-(<a href="https://small.r7rs.org/attachment/r7rs.pdf">PDF</a>).</p>
-
-<p>Also by convention, the phrase <dfn>it is an error to <em>X</em></dfn> is used in
-Scheme documents to mean that <em>X</em> is not allowed, but to leave
-it up to the implementer to decide what to do in response.
-Implementations may signal an error, assign some new meaning to
-<em>X</em>, or fail catastrophically.</p>
 
 <h2 id="implementation">Implementation</h2>
 
